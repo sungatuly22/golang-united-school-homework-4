@@ -13,8 +13,9 @@ var (
 	errorEmptyInput = errors.New("input is empty")
 	// Use when the expression has number of operands not equal to two
 	errorNotTwoOperands = errors.New("expecting two operands, but received more or less")
-	errorWrongCharacter = errors.New("there is wrong character in input")
 )
+
+const customErr = "error is: %w"
 
 // Implement a function that computes the sum of two int numbers written as a string
 // For example, having an input string "3+5", it should return output string "8" and nil error
@@ -44,23 +45,23 @@ func StringSum(input string) (output string, err error) {
 
 	newInput := strings.ReplaceAll(input, " ", "")
 	if len(newInput) == 0 {
-		return "", fmt.Errorf("err is: %w", errorEmptyInput)
+		return "", fmt.Errorf(customErr, errorEmptyInput)
 	}
 	operands := inputSplit(newInput)
 
 	if len(operands) != 2 {
-		return "", fmt.Errorf("err is: %w", errorNotTwoOperands)
+		return "", fmt.Errorf(customErr, errorNotTwoOperands)
 	}
 	firstNum, err := strconv.Atoi(operands[0])
 
 	if err != nil {
-		return "", fmt.Errorf("err is: %w", errorWrongCharacter)
+		return "", fmt.Errorf(customErr, err)
 	}
 
 	secondNum, err := strconv.Atoi(operands[1])
 
 	if err != nil {
-		return "", fmt.Errorf("err is: %w", errorWrongCharacter)
+		return "", fmt.Errorf(customErr, err)
 	}
 	output = strconv.Itoa(firstNum + secondNum)
 	return
