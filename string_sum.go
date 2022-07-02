@@ -2,6 +2,9 @@ package string_sum
 
 import (
 	"errors"
+	"fmt"
+	"strconv"
+	"strings"
 )
 
 //use these errors as appropriate, wrapping them with fmt.Errorf function
@@ -10,6 +13,7 @@ var (
 	errorEmptyInput = errors.New("input is empty")
 	// Use when the expression has number of operands not equal to two
 	errorNotTwoOperands = errors.New("expecting two operands, but received more or less")
+	errorWrongCharacter = errors.New("there is wrong character in input")
 )
 
 // Implement a function that computes the sum of two int numbers written as a string
@@ -22,6 +26,42 @@ var (
 //
 // Use the errors defined above as described, again wrapping into fmt.Errorf
 
+func inputSplit(input string) (operands []string) {
+	var str string
+	for i, r := range input {
+		if i != 0 && (r == '-' || r == '+') {
+			operands = append(operands, str)
+			str = string(r)
+		} else {
+			str += string(r)
+		}
+	}
+	operands = append(operands, str)
+	return
+}
+
 func StringSum(input string) (output string, err error) {
-	return "", nil
+
+	newInput := strings.ReplaceAll(input, " ", "")
+	if len(newInput) == 0 {
+		return "", fmt.Errorf("err is: %w", errorEmptyInput)
+	}
+	operands := inputSplit(newInput)
+
+	if len(operands) != 2 {
+		return "", fmt.Errorf("err is: %w", errorNotTwoOperands)
+	}
+	firstNum, err := strconv.Atoi(operands[0])
+
+	if err != nil {
+		return "", fmt.Errorf("err is: %w", errorWrongCharacter)
+	}
+
+	secondNum, err := strconv.Atoi(operands[1])
+
+	if err != nil {
+		return "", fmt.Errorf("err is: %w", errorWrongCharacter)
+	}
+	output = strconv.Itoa(firstNum + secondNum)
+	return
 }
